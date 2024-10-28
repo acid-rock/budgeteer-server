@@ -6,11 +6,12 @@ const { DateTime } = require("luxon");
 router
   // Create
   .post("/create", async (req, res) => {
-    const { type, amount, category, date, description } = req.body;
+    const { owner, type, amount, category, date, description } = req.body;
 
     // Make the entry
     try {
       const transaction = await Transaction.create({
+        owner: owner,
         type: type,
         amount: amount,
         category: category,

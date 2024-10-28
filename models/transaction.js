@@ -5,6 +5,13 @@ const { DateTime } = require("luxon");
 const Transaction = sequelize.define(
   "Transaction",
   {
+    owner: {
+      type: {
+        id: DataTypes.STRING,
+        name: DataTypes.STRING,
+      },
+      allowNull: false,
+    },
     type: {
       type: DataTypes.STRING,
       allowNull: false,
