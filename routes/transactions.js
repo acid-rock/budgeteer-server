@@ -6,12 +6,14 @@ const { DateTime } = require("luxon");
 router
   // Create
   .post("/create", async (req, res) => {
-    const { owner, type, amount, category, date, description } = req.body;
+    const { username, user_id, type, amount, category, date, description } =
+      req.body;
 
     // Make the entry
     try {
       const transaction = await Transaction.create({
-        owner: owner,
+        username: username,
+        user_id: user_id,
         type: type,
         amount: amount,
         category: category,
@@ -60,8 +62,12 @@ router
 // Fetch
 router
   .get("/fetch", async (req, res) => {
+    const user_id = req.query.user_id;
+
     try {
-      const transactions = await Transaction.findAll();
+      const transactions = await Transaction.findAll({
+        where: { user_id: user_id },
+      });
 
       return res.json(transactions);
     } catch (error) {
@@ -90,6 +96,26 @@ router
       return res.json(transaction);
 
       return res.sendStatus(200);
+    } catch (error) {
+      console.error("Error creating - ", error);
+      return res.sendStatus(500);
+    }
+  })
+  .get("/fetchRecent", async (req, res) => {
+    const user_id = req.query.user_id;
+
+    try {
+      const recent = await Transaction.findAll({
+        where: { user_id: user_id },
+        limit: 5,
+        order: [["date", "DESC"]],
+      });
+
+      if (!recent) {
+        return res.sendStatus(500);
+      }
+
+      return res.status(200).json(recent);
     } catch (error) {
       console.error("Error creating - ", error);
       return res.sendStatus(500);
