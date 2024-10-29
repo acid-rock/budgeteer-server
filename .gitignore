@@ -25,4 +25,4 @@ coverage/
 .vscode/
 .idea/
 
-.sqlite
+database.sqlite
