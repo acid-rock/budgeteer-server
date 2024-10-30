@@ -43,7 +43,7 @@ router
 
     // Update the entry
     try {
-      const newTransaction = await Transaction.update(
+      await Transaction.update(
         {
           type: type,
           amount: amount,
@@ -53,11 +53,6 @@ router
         },
         { where: { id: id } }
       );
-
-      if (!newTransaction)
-        return res
-          .status(500)
-          .json({ message: "Error editing entry. Try again later." });
 
       return res.sendStatus(200);
     } catch (error) {
@@ -134,12 +129,10 @@ router
     const { start, end } = getUTCDayRange(timezone);
 
     try {
-      const transactions = await Transaction.findAll(
-        {
-          where: { user_id: user_id, date: { [Op.between]: [start, end] } },
-        },
-        { order: [["date", "DESC"]] }
-      );
+      const transactions = await Transaction.findAll({
+        where: { user_id: user_id, date: { [Op.between]: [start, end] } },
+        order: [["date", "DESC"]],
+      });
 
       if (!transactions) {
         return res.status(404).json({});
@@ -157,12 +150,10 @@ router
     const { start, end } = getUTCWeekRange(timezone);
 
     try {
-      const transactions = await Transaction.findAll(
-        {
-          where: { user_id: user_id, date: { [Op.between]: [start, end] } },
-        },
-        { order: [["date", "DESC"]] }
-      );
+      const transactions = await Transaction.findAll({
+        where: { user_id: user_id, date: { [Op.between]: [start, end] } },
+        order: [["date", "DESC"]],
+      });
 
       if (!transactions) {
         return res.status(404).json({});
@@ -180,12 +171,10 @@ router
     const { start, end } = getUTCMonthRange(timezone);
 
     try {
-      const transactions = await Transaction.findAll(
-        {
-          where: { user_id: user_id, date: { [Op.between]: [start, end] } },
-        },
-        { order: [["date", "DESC"]] }
-      );
+      const transactions = await Transaction.findAll({
+        where: { user_id: user_id, date: { [Op.between]: [start, end] } },
+        order: [["date", "DESC"]],
+      });
 
       if (!transactions) {
         return res.status(404).json({});
@@ -203,12 +192,10 @@ router
     const { start, end } = getUTCYearRange(timezone);
 
     try {
-      const transactions = await Transaction.findAll(
-        {
-          where: { user_id: user_id, date: { [Op.between]: [start, end] } },
-        },
-        { order: [["date", "DESC"]] }
-      );
+      const transactions = await Transaction.findAll({
+        where: { user_id: user_id, date: { [Op.between]: [start, end] } },
+        order: [["date", "DESC"]],
+      });
 
       if (!transactions) {
         return res.status(404).json({});
