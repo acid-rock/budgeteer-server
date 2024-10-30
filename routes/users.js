@@ -6,7 +6,7 @@ router.post("/createUser", async (req, res) => {
   const { id, username, timezone } = req.body;
 
   try {
-    const user = await User.findOrCreate({
+    const [user, created] = await User.findOrCreate({
       where: {
         id: id,
         username: username,
