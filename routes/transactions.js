@@ -2,6 +2,13 @@ const express = require("express");
 const router = express.Router();
 const Transaction = require("../models/transaction");
 const { DateTime } = require("luxon");
+const {
+  getUTCDayRange,
+  getUTCWeekRange,
+  getUTCMonthRange,
+  getUTCYearRange,
+} = require("../lib/dateUtils");
+const { Op } = require("sequelize");
 
 router
   // Create
@@ -75,6 +82,7 @@ router
       return res.sendStatus(500);
     }
   })
+  // Fetch transaction by ID.
   .get("/fetch/:id", async (req, res) => {
     const id = req.params.id;
 
@@ -94,8 +102,6 @@ router
 
       // Return the data
       return res.json(transaction);
-
-      return res.sendStatus(200);
     } catch (error) {
       console.error("Error creating - ", error);
       return res.sendStatus(500);
@@ -119,6 +125,98 @@ router
     } catch (error) {
       console.error("Error creating - ", error);
       return res.sendStatus(500);
+    }
+  })
+  // Fetch current day transactions
+  .get("/fetchCurrent", async (req, res) => {
+    const { user_id, timezone } = req.query;
+
+    const { start, end } = getUTCDayRange(timezone);
+
+    try {
+      const transactions = await Transaction.findAll(
+        {
+          where: { user_id: user_id, date: { [Op.between]: [start, end] } },
+        },
+        { order: [["date", "DESC"]] }
+      );
+
+      if (!transactions) {
+        return res.status(404).json({});
+      }
+
+      return res.json(transactions);
+    } catch (error) {
+      console.error("Error fetching data - ", error);
+    }
+  })
+  // Fetch weekly transactions
+  .get("/fetchWeekly", async (req, res) => {
+    const { user_id, timezone } = req.query;
+
+    const { start, end } = getUTCWeekRange(timezone);
+
+    try {
+      const transactions = await Transaction.findAll(
+        {
+          where: { user_id: user_id, date: { [Op.between]: [start, end] } },
+        },
+        { order: [["date", "DESC"]] }
+      );
+
+      if (!transactions) {
+        return res.status(404).json({});
+      }
+
+      return res.json(transactions);
+    } catch (error) {
+      console.error("Error fetching data - ", error);
+    }
+  })
+  // Fetch monthly transactions
+  .get("/fetchMonthly", async (req, res) => {
+    const { user_id, timezone } = req.query;
+
+    const { start, end } = getUTCMonthRange(timezone);
+
+    try {
+      const transactions = await Transaction.findAll(
+        {
+          where: { user_id: user_id, date: { [Op.between]: [start, end] } },
+        },
+        { order: [["date", "DESC"]] }
+      );
+
+      if (!transactions) {
+        return res.status(404).json({});
+      }
+
+      return res.json(transactions);
+    } catch (error) {
+      console.error("Error fetching data - ", error);
+    }
+  })
+  // Fetch yearly transactions
+  .get("/fetchYearly", async (req, res) => {
+    const { user_id, timezone } = req.query;
+
+    const { start, end } = getUTCYearRange(timezone);
+
+    try {
+      const transactions = await Transaction.findAll(
+        {
+          where: { user_id: user_id, date: { [Op.between]: [start, end] } },
+        },
+        { order: [["date", "DESC"]] }
+      );
+
+      if (!transactions) {
+        return res.status(404).json({});
+      }
+
+      return res.json(transactions);
+    } catch (error) {
+      console.error("Error fetching data - ", error);
     }
   });
 

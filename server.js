@@ -3,6 +3,7 @@ const app = express();
 const sequelize = require("./database/config");
 const cors = require("cors");
 const transactionRoutes = require("./routes/transactions");
+const userRoutes = require("./routes/users.js");
 
 const PORT = 3000;
 
@@ -12,6 +13,7 @@ app.use(express.json());
 
 // Routes
 app.use("/transactions", transactionRoutes);
+app.use("/users", userRoutes);
 
 // Database
 (async () => {
